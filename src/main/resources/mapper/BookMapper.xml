@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wonders.library.platform.dao.BookDao">
+
+    <select id="getById" parameterType="com.wonders.library.platform.entity.BookEntity"
+            resultType="com.wonders.library.platform.entity.BookEntity">
+        select * from library_book_info where is_delete=0 and id=#{id}
+    </select>
+
+    <select id="getBookList" parameterType="com.wonders.library.platform.entity.BookEntity"
+            resultType="com.wonders.library.platform.entity.BookEntity">
+        select * from library_book_info where is_delete=0 limit #{page},#{rows}
+    </select>
+
+
+    <update id="putBook">
+		update library_book_info set name=#{name},isbn=#{isbn},bk_case_id=#{bkCaseId},price=#{price},author=#{author},
+		type=#{type},synopsis=#{synopsis},press=#{image},image=#{image},update_time=#{updateTime}  where id=#{id}
+	</update>
+
+    <insert id="addBook">
+		insert into library_book_info(name,isbn,bk_case_id,price,author,type,synopsis,press,image,create_time)
+		values(#{name},#{isbn},#{bkCaseId},#{price},#{author},#{type},#{synopsis},#{press},#{image},#{createTime})
+	</insert>
+
+    <update id="delBook">
+		update library_book_info set is_delete=1 where id=#{id}
+	</update>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(*) from library_book_info where is_delete=0
+    </select>
+
+
+</mapper>

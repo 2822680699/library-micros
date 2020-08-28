@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wonders.library.platform.dao.AdminDao">
+
+    <select id="getById" parameterType="com.wonders.library.platform.entity.AdminEntity"
+            resultType="com.wonders.library.platform.entity.AdminEntity">
+        select * from library_admin_info where is_delete=0 and user_name=#{userName}
+    </select>
+
+    <select id="find" parameterType="com.wonders.library.platform.entity.AdminEntity"
+            resultType="com.wonders.library.platform.entity.AdminEntity">
+        select * from library_admin_info where is_delete=0 limit #{page},#{rows}
+    </select>
+
+    <insert id="insert">
+		insert into library_admin_info(job_no,user_name,password,name,mobile,create_time)
+		values(#{jobNo},#{userName},#{password},#{name},#{mobile},#{createTime})
+	</insert>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(*) from library_admin_info where is_delete=0
+    </select>
+</mapper>
