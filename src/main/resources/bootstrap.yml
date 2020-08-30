@@ -53,9 +53,9 @@ mybatis-plus:
 jwt:
   secret: gjLahh9WPnF3yfFH8Mp3Jyk08fLmeZwv
   # tocken 过期时间，单位秒
-  expire: 300
+  expire: 3000
   # 需要认证的url，多个URL使用英文逗号,分割
-  authorised-urls: /admin/**,/book/**,/index
+  authorised-urls: /admin/**,/book/**
 #logging:
 #  config: classpath:logback.xml
 #  #关闭nocas心跳日志输出

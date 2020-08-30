@@ -8,6 +8,11 @@
         select * from library_book_info where is_delete=0 and id=#{id}
     </select>
 
+    <select id="find" parameterType="com.wonders.library.platform.entity.BookEntity"
+            resultType="com.wonders.library.platform.entity.BookEntity">
+        select * from library_book_info where is_delete=0 and name like CONCAT('%',#{name},'%') limit #{page},#{rows}
+    </select>
+
     <select id="getBookList" parameterType="com.wonders.library.platform.entity.BookEntity"
             resultType="com.wonders.library.platform.entity.BookEntity">
         select * from library_book_info where is_delete=0 limit #{page},#{rows}
@@ -32,5 +37,7 @@
         select count(*) from library_book_info where is_delete=0
     </select>
 
-
+    <select id="countFind" resultType="java.lang.Integer">
+        select count(*) from library_book_info where is_delete=0 and name like CONCAT('%',#{name},'%')
+    </select>
 </mapper>

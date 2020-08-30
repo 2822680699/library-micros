@@ -54,6 +54,14 @@ public interface BookDao {
     BookEntity getById(@Param("id") int id);
 
     /**
+     * 查询书籍
+     *
+     * @param name 书籍名称
+     * @return
+     */
+    List<BookEntity> find(@Param("page") int page, @Param("rows") int rows,@Param("name") String name);
+
+    /**
      * 修改书籍信息
      *
      * @param id       编号
@@ -87,5 +95,13 @@ public interface BookDao {
      * @return
      */
     int count();
+
+    /**
+     * 获取总条数
+     * @param name 书籍名称
+     * @return
+     */
+    int countFind(@Param("name") String name);
+
 
 }

@@ -25,8 +25,8 @@ public class AdminController {
     @ApiOperation("获取管理员列表信息")
     @ApiImplicitParams({@ApiImplicitParam(name = "page", value = "页数", paramType = "query", dataType = "String")
             , @ApiImplicitParam(name = "rows", value = "条数", paramType = "query", dataType = "String")
-            , @ApiImplicitParam(name = "Authorization", value = "唯一授权码", paramType = "header", dataType = "String")})
-    public ResultVo userList(@RequestParam String page, @RequestParam String rows,@RequestHeader String Authorization) {
+            , @ApiImplicitParam(name = "authorization", value = "唯一授权码", paramType = "header", dataType = "String")})
+    public ResultVo userList(@RequestParam String page, @RequestParam String rows,@RequestHeader String authorization) {
         if (StringUtils.isEmpty(page)) {
             return ResultVo.failed("页数不可为空！");
         }
@@ -44,10 +44,10 @@ public class AdminController {
             , @ApiImplicitParam(name = "password", value = "用户名", paramType = "query", dataType = "String")
             , @ApiImplicitParam(name = "name", value = "管理员姓名", paramType = "query", dataType = "String")
             , @ApiImplicitParam(name = "mobile", value = "管理员联系方式", paramType = "query", dataType = "String")
-            , @ApiImplicitParam(name = "Authorization", value = "唯一授权码", paramType = "header", dataType = "String")})
+            , @ApiImplicitParam(name = "authorization", value = "唯一授权码", paramType = "header", dataType = "String")})
     public ResultVo addUser(@RequestParam String jobNo
             , @RequestParam String userName, @RequestParam String password
-            , @RequestParam String name, @RequestParam String mobile,@RequestHeader String Authorization) {
+            , @RequestParam String name, @RequestParam String mobile,@RequestHeader String authorization) {
         if (StringUtils.isEmpty(jobNo)) {
             return ResultVo.failed("工号不可为空！");
         }

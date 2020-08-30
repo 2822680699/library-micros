@@ -16,7 +16,6 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.util.AntPathMatcher;
-
 /**
  * JWT过滤器
  */
@@ -24,7 +23,6 @@ public class JwtFilter implements Filter {
     private JwtHelper jwtHelper;
     private List<String> urls = null;
     private static final org.springframework.util.PathMatcher pathMatcher = new AntPathMatcher();
-
     public JwtFilter(JwtHelper jwtHelper, String[] authorisedUrls) {
         this.jwtHelper = jwtHelper;
         urls = Arrays.asList(authorisedUrls);
@@ -71,24 +69,26 @@ public class JwtFilter implements Filter {
         }*/
 
         // 验证受保护的接口
+        System.out.println("urls=="+urls.size());
         for (String url : urls) {
+            System.out.println("url=="+url);
+            System.out.println("spath=="+spath);
             if (pathMatcher.match(url, spath)) {
                 Object token = jwtHelper.validateTokenAndGetClaims(httpRequest);
                 HttpSession session = httpRequest.getSession();
                 session.setAttribute("loginName", ((Map) token).get("loginName"));          //将用户名放在session中
                 if (token != null) {
+                    System.out.println(1);
                     chain.doFilter(request, response);
                     return;
-                } else {
+                }else{
+                    System.out.println(2);
                     httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "未授权或者授权已经过期");
                     return;
                 }
-            } else {
-                chain.doFilter(request, response);
-                return;
             }
         }
-
+        System.out.println(4);
         chain.doFilter(request, response);
         return;
     }

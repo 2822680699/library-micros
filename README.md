@@ -9,6 +9,21 @@
 
 调试方式：postman、swagger
 
+接口:
+/library/login         跳转登录页面
+/library/book          跳转书籍管理页面
+/library/update        跳转修改页面
+/library/create        跳转新增页面
+/library/auth/login    登录授权
+/library/admin/list    管理员信息列表
+/library/admin/save    新增管理员信息
+/library/book/list     书籍列表信息
+/library/book/save     新增书籍信息
+/library/book/byId     书籍详情信息
+/library/book/del      删除书籍信息
+/library/book/updated  修改书籍信息
+
+项目框架:
 library-micros
   -main
      -java

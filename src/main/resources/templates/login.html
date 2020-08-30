@@ -1,59 +1,74 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>图书馆登录</title>
-    <link rel="stylesheet" href="./login.css">
-    <link rel="stylesheet" href="./bootstrap-3.3.7.css">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>图书馆后台管理系统-登录</title>
+    <link rel="stylesheet" type="text/css" href="./layui/css/layui.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="./css/login.css" />
 </head>
-
-<body>
-<div class="box">
-    <div class="cnt">
-        <p id="huanying"><span id="cnt_one">欢迎登录图书馆后台</span></p>
-        <hr/>
-        <div>
-            <form class="bs-example bs-example-form" role="form">
-                <div class="input-group">
-                    <span class="input-group-addon"><img src="user.png"></span>
-                    <input type="text" class="form-control" id="loginName" placeholder="请输入您的账号">
+<body class="beg-login-bg">
+    <div class="beg-login-box">
+        <header>
+            <h1>图书馆后台管理系统</h1>
+        </header>
+        <div class="beg-login-main">
+            <form action="login" class="layui-form" method="post">
+                <div class="layui-form-item">
+                    <label class="beg-login-icon">
+                        <i class="layui-icon">&#xe612;</i>
+                    </label>
+                    <input type="text" lay-verify="required" name="loginName" id="loginName" autocomplete="off" placeholder="这里输入账号" class="layui-input" lay-verType="tips">
                 </div>
-                <br>
-                <div class="input-group">
-                    <span class="input-group-addon"><img src="password.png"></span>
-                    <input type="password" class="form-control" id="password" placeholder="请输入您的密码">
+                <div class="layui-form-item">
+                    <label class="beg-login-icon">
+                        <i class="layui-icon">&#xe642;</i>
+                    </label>
+                    <input type="password" lay-verify="required" name="password" id="password" autocomplete="off" placeholder="这里输入密码" class="layui-input" lay-verType="tips">
                 </div>
-                <br>
+                <div class="layui-form-item">
+                    <div class="beg-pull">
+                        <button type="button" onclick="login()" class="layui-btn layui-btn-normal" style="width:100%;">
+                            登　　录
+                        </button>
+                    </div>
+                </div>
             </form>
         </div>
-        <div style="margin-top:40px;">
-            <input class="form-control btn btn-info" type="button" value="登录" onclick="login()"/>
-        </div>
+        <footer>
+            <p>power by dw © </p>
+        </footer>
     </div>
-</div>
-<script src="./jquery-2.1.1.min.js"></script>
-<script src="./bootstrap-3.3.7.js"></script>
-<script>
-    function login() {
-        var loginName = document.getElementById("loginName").value;
-        var password = document.getElementById("password").value;
-        console.log(loginName, password)
-        $.ajax({
-            url: "/library/auth/login",
-            type: "post",
-            data: {loginName: loginName, password: password},
-            dataType: "json",
-            success: function (res) {
-                if(res.code===500){
-                    alert(res.message);
-                }else{
-                    window.location.href="/library/index?token="+res.data.token;
-                }
-
+    <script type="text/javascript" src="./javascript/jquery.min.js"></script>
+    <script type="text/javascript" src="./layui/layui.js"></script>
+    <script type="text/javascript" src="./javascript/login.js"></script>
+    <script>
+        function login() {
+            var loginName = document.getElementById("loginName").value;
+            var password = document.getElementById("password").value;
+            console.log(loginName, password)
+            if(!loginName){
+                alert("用户名不可为空")
             }
-        })
-    }
-</script>
+            if(!password){
+                alert("密码不可为空")
+            }
+            $.ajax({
+                url: "/library/auth/login",
+                type: "post",
+                data: {loginName: loginName, password: password},
+                dataType: "json",
+                success: function (res) {
+                    if(res.code===500){
+                        alert(res.message);
+                    }else{
+                        window.location.href="/library/index?token="+res.data.token;
+                    }
+
+                }
+            })
+        }
+    </script>
 </body>
 </html>

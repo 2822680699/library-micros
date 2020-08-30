@@ -1,286 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>单播消息推送运营管理中心</title>
-    <!-- 引入样式 -->
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>图书馆管理运营中心</title>
+  <link rel="stylesheet" href="./layui/css/layui.css">
 </head>
-<style>
-    .title {
-        font: 24px large;
-        padding-left: 40px;
-        letter-spacing: 1px;
-    }
-
-    #searching {
-
-    }
-
-    #searching ul {
-
-    }
-
-    #searching ul li {
-        list-style: none;
-        float: left;
-        margin-right: 30px;
-    }
-
-    #client-list {
-        padding: 40px;
-        margin-top: 40px;
-    }
-
-    #push-list {
-        padding: 40px;
-        margin-top: 40px;
-    }
-</style>
-<body>
-<div id="app">
-    <p class="title">单播消息推送运营管理中心</p>
-    <div id="searching">
-        <ul>
-            <li>
-                <el-input v-model="name" placeholder="请输入书籍名称"></el-input>
-            </li>
-            <li>
-                <el-button type="primary" @click="find">信息查询</el-button>
-            </li>
-            <li style="float: right;">
-                <el-button type="primary" @click="addClient">新增书籍信息</el-button>
-            </li>
-        </ul>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+  <div class="layui-header">
+    <div class="layui-logo">图书馆管理运营中心</div>
+  </div>
+  
+  <div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+      <!-- 左侧导航区域-->
+      <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+        <li class="layui-nav-item"><a class="layui-this" href="#" onclick="page('books')">控制台</a></li>
+        <li class="layui-nav-item">
+          <a href="javascript:;">书籍管理</a>
+          <dl class="layui-nav-child">
+            <dd><a href="#" onclick="page('books')">书籍列表</a></dd>
+          </dl>
+        </li>
+      </ul>
     </div>
-    <div id="client-list">
-        <template>
-            <el-table
-                    :data="tableData"
-                    border
-                    style="width: 100%">
-                <el-table-column
-                        fixed
-                        prop="id"
-                        label="编号"
-                        width="80">
-                </el-table-column>
-                <el-table-column
-                        prop="name"
-                        label="书籍名称"
-                        width="150">
-                </el-table-column>
-                <el-table-column
-                        prop="isbn"
-                        label="书籍编码"
-                        width="450">
-                </el-table-column>
-                <el-table-column
-                        prop="bkCaseId"
-                        label="书架编号"
-                        width="300">
-                </el-table-column>
-                <el-table-column
-                        prop="price"
-                        label="定价"
-                        width="100">
-                </el-table-column>
-                <el-table-column
-                        prop="author"
-                        label="作者"
-                        width="150">
-                </el-table-column>
-                <el-table-column
-                        prop="type"
-                        label="书籍类型"
-                        width="150">
-                </el-table-column>
-                <el-table-column
-                        prop="press"
-                        label="出版社"
-                        width="150">
-                </el-table-column>
-                <el-table-column
-                        prop="是否借出"
-                        label="status"
-                        width="150">
-                </el-table-column>
-                <el-table-column
-                        prop="封面图片"
-                        label="image"
-                        width="150">
-                </el-table-column>
-                <el-table-column
-                        fixed="right"
-                        label="操作"
-                        width="180">
-                    <template slot-scope="scope">
-                        <el-button @click="delClient(1)" type="text" size="small">删除</el-button>
-                        <el-button type="text" @click="putClient(1)" size="small">编辑</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </template>
-
-    </div>
-
+  </div>
+  <div class="layui-footer">
+    <!-- 底部固定区域 -->
+    © layui.com - 底部固定区域
+  </div>
 </div>
-<!-- 引入组件库 -->
-<script src="./jquery-2.1.1.min.js"></script>
-<script src="./common.js"></script>
-<script src="./vue.min.js"></script>
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script type="text/javascript" src="./javascript/jquery.min.js"></script>
+<script type="text/javascript" src="./layui/layui.js"></script>
+<script type="text/javascript" src="./javascript/index.js"></script>
+<script type="text/javascript" src="./common.js"></script>
 <script>
-    var token = getQueryString2("token")
-    let app = new Vue({
-        el: '#app',
-        data: {
-            type: 0,
-            name: '',
-            tableData: [{
-                id: '1',
-                clientId: 'qk0Mx6EV8X',
-                clientSecret: 'RYefkR8TGpgBc9ELGfia6CJv4DYeWcCo4rq1Qokm',
-                status: '已审核',
-                unitName: '上海市普陀区金沙江路 1517 弄',
-                time: '2016-05-02',
-            }, {
-                id: '1',
-                clientId: 'qk0Mx6EV8X',
-                clientSecret: 'RYefkR8TGpgBc9ELGfia6CJv4DYeWcCo4rq1Qokm',
-                status: '已审核',
-                unitName: '上海市普陀区金沙江路 1517 弄',
-                time: '2016-05-02',
-            }, {
-                id: '1',
-                clientId: 'qk0Mx6EV8X',
-                clientSecret: 'RYefkR8TGpgBc9ELGfia6CJv4DYeWcCo4rq1Qokm',
-                status: '已审核',
-                unitName: '上海市普陀区金沙江路 1517 弄',
-                time: '2016-05-02',
-            }, {
-                id: '1',
-                clientId: 'qk0Mx6EV8X',
-                clientSecret: 'RYefkR8TGpgBc9ELGfia6CJv4DYeWcCo4rq1Qokm',
-                status: '已审核',
-                unitName: '上海市普陀区金沙江路 1517 弄',
-                time: '2016-05-02',
-            }],
-            pushData: [{
-                id: '1',
-                clientId: 'qk0Mx6EV8X',
-                userName: 'eshimin30268422',
-                title: '单播推送',
-                body: '推送内容',
-                status: '推送成功',
-                device: '安卓',
-                time: '2016-05-02',
-            }, {
-                id: '1',
-                clientId: 'qk0Mx6EV8X',
-                userName: 'eshimin30268422',
-                title: '单播推送',
-                body: '推送内容',
-                status: '推送成功',
-                device: '安卓',
-                time: '2016-05-02',
-            }, {
-                id: '1',
-                clientId: 'qk0Mx6EV8X',
-                userName: 'eshimin30268422',
-                title: '单播推送',
-                body: '推送内容',
-                status: '推送成功',
-                device: '安卓',
-                time: '2016-05-02',
-            }, {
-                id: '1',
-                clientId: 'qk0Mx6EV8X',
-                userName: 'eshimin30268422',
-                title: '单播推送',
-                body: '推送内容',
-                status: '推送成功',
-                device: '安卓',
-                time: '2016-05-02',
-            }]
-        },
-        methods: {
-            handleClick(row) {
-                console.log(row);
-            },
-            isDisplay(type) {
-                this.type = type
-            },
-            getInitialize(){
-                this.list();
-            },
-            list() {
-                this.$http.get('/library/book/list',
-                    {
-                        page: 1,
-                        rows: 100,
-                    }, {
-                        headers: {'Authorization': token}
-                    }).then(function (response) {
-                        console.log(response)
-                    }
-                )
-            },
-            find() {
-                if (!this.name) {
-                    this.$message({
-                        message: '警告哦，查询条件不可为空！',
-                        type: 'warning'
-                    });
-                }
-            },
-            delClient(id) {
-                alert(id)
-                if (id) {
-                    this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                        });
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
-                    });
-                }
-            },
-            putClient(id) {
-                alert(id)
-            },
-            addClient() {
-                if (this.addUnitName) {
-                    this.$confirm('此操作将新增客户信息, 是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        this.$message({
-                            type: 'success',
-                            message: '新增成功!'
-                        });
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消新增'
-                        });
-                    });
-                }
-            }
-        },
-        mounted() {
-            this.getInitialize();
-        },
-    });
+    var token=getQueryString2("token");
+    function page(i) {
+        window.location.href="/library/"+i+"?token="+token
+    }
 </script>
 </body>
 </html>

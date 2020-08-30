@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>图书馆管理运营中心</title>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./icheck/minimal/red.css">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">图书馆管理运营中心</div>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域-->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">书籍管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="#" onclick="page('books')">书籍列表</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">
+            <fieldset class="layui-elem-field">
+                <legend>书籍管理 - 书籍列表</legend>
+                <div class="layui-field-box">
+                    <input type="text" id="name" placeholder="输入书籍名称" style="padding: 5px;float: left;margin-bottom: 5px;">
+                    <div style="width: 50px;float: left;margin-left: 20px;height: 30px;border-radius: 5px;background: #1E9FFF;text-align: center;line-height: 28px;color: #fff;"><a href="#" onclick="list()" style="color: #fff;letter-spacing: 2px;">查询</a></div>
+                    <div style="width: 50px;float: left;margin-left: 20px;height: 30px;border-radius: 5px;background: #1E9FFF;text-align: center;line-height: 28px;color: #fff;"><a href="#" onclick="page('create')" style="color: #fff;letter-spacing: 2px;">新增</a></div>
+                    <hr>
+                    <hr>
+                    <div id="table"></div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+</div>
+<script type="text/javascript" src="./javascript/jquery.min.js"></script>
+<script type="text/javascript" src="./layui/layui.js"></script>
+<script type="text/javascript" src="./icheck/icheck.js"></script>
+<script type="text/javascript" src="./javascript/dw.js"></script>
+<script type="text/javascript" src="./common.js"></script>
+<script>
+    var token = getQueryString2("token");
+    function page(i) {
+        window.location.href = "/library/" + i + "?token=" + token
+    }
+
+    function update(id) {
+        window.location.href = 'update?id=' + id + '&token=' + token;
+    }
+
+
+    function del(id) {
+        console.log("1ad", id)
+        if (!id) {
+            alert("编号不可为空");
+            return;
+        }
+        $.ajax({
+            url: "/library/book/del",
+            type: "post",
+            headers: {"authorization": token},
+            data: {
+                id: id
+            },
+            dataType: "json",
+            success: function (res) {
+                console.log(res)
+                if (res.code === 500) {
+                    alert(res.message);
+                    if(res.message=="JWT已过期"){
+                        window.location.href="login";
+                    }
+                } else {
+                    window.location.href = "books?token=" + token;
+                }
+            }
+        })
+    }
+    list();
+    function list() {
+        var name = document.getElementById("name").value;
+        console.log("name",name)
+        $.ajax({
+            url: "/library/book/list",
+            type: "post",
+            headers: {"authorization": token},
+            data: {page: 1, rows: 10000,name:name},
+            dataType: "json",
+            success: function (res) {
+                console.log(res.code == 500)
+                if (res.code == 500) {
+                    alert(res.message);
+                    if(res.message=="JWT已过期"){
+                        window.location.href="login";
+                    }
+                } else {
+                    if (res.data.count>0) {
+                        console.log("aaaao", res.data.list[0].name)
+                        var str = '<tr>\n' +
+                            '                      <td> ' + res.data.list[0].id + '</td>\n' +
+                            '                      <td>' + res.data.list[0].name + '</td>\n' +
+                            '                      <td>' + res.data.list[0].isbn + '</td>\n' +
+                            '                      <td>' + res.data.list[0].bkCaseId + '</td>\n' +
+                            '                      <td>' + res.data.list[0].price + '</td>\n' +
+                            '                      <td>' + res.data.list[0].author + '</td>\n' +
+                            '                      <td>' + res.data.list[0].type + '</td>\n' +
+                            '                      <td>' + res.data.list[0].synopsis + '</td>\n' +
+                            '                      <td>' + res.data.list[0].press + '</td>\n' +
+                            '                      <td>' + res.data.list[0].image + '</td>\n' +
+                            '                      <td class="text-center">\n' +
+                            '                        <div class="layui-btn-group">\n' +
+                            '                          <button class="layui-btn layui-btn-xs layui-btn-normal dw-dailog" onclick="update(' + res.data.list[0].id + ')" dw-title="编辑用户">\n' +
+                            '                            <i class="layui-icon">&#xe642;</i>编辑\n' +
+                            '                          </button>\n' +
+                            '                          <button class="layui-btn layui-btn-xs layui-btn-danger dw-delete" onclick="del(' + res.data.list[0].id + ')" dw-title="小明">\n' +
+                            '                            <i class="layui-icon">&#xe640;</i>删除\n' +
+                            '                          </button>\n' +
+                            '                        </div>\n' +
+                            '                      </td>\n' +
+                            '                      </tr>';
+                        for (var i = 1; i < res.data.count; i++) {
+                            str += '<tr>\n' +
+                                '                      <td>' + res.data.list[i].id + '</td>\n' +
+                                '                      <td>' + res.data.list[i].name + '</td>\n' +
+                                '                      <td>' + res.data.list[i].isbn + '</td>\n' +
+                                '                      <td>' + res.data.list[i].bkCaseId + '</td>\n' +
+                                '                      <td>' + res.data.list[i].price + '</td>\n' +
+                                '                      <td>' + res.data.list[i].author + '</td>\n' +
+                                '                      <td>' + res.data.list[i].type + '</td>\n' +
+                                '                      <td>' + res.data.list[i].synopsis + '</td>\n' +
+                                '                      <td>' + res.data.list[i].press + '</td>\n' +
+                                '                      <td>' + res.data.list[i].image + '</td>\n' +
+                                '                      <td class="text-center">\n' +
+                                '                        <div class="layui-btn-group">\n' +
+                                '                          <button class="layui-btn layui-btn-xs layui-btn-normal dw-dailog" onclick="update(' + res.data.list[i].id + ')" dw-title="编辑用户">\n' +
+                                '                            <i class="layui-icon">&#xe642;</i>编辑\n' +
+                                '                          </button>\n' +
+                                '                          <button class="layui-btn layui-btn-xs layui-btn-danger dw-delete" onclick="del(' + res.data.list[i].id + ')" dw-title="小明">\n' +
+                                '                            <i class="layui-icon">&#xe640;</i>删除\n' +
+                                '                          </button>\n' +
+                                '                        </div>\n' +
+                                '                      </td>\n' +
+                                '                      </tr>';
+                        }
+                    }
+
+                    document.getElementById("table").innerHTML = ' <table class="layui-table">\n' +
+                        '                        <colgroup>\n' +
+                        '                            <col width="150">\n' +
+                        '                            <col width="150">\n' +
+                        '                            <col width="200">\n' +
+                        '                            <col>\n' +
+                        '                            <col>\n' +
+                        '                        </colgroup>\n' +
+                        '                        \n' +
+                        '                        <tr>\n' +
+                        '                            <th>编号</th>\n' +
+                        '                            <th>书籍名称</th>\n' +
+                        '                            <th>书籍编码</th>\n' +
+                        '<th>书架编号</th>\n' +
+                        '<th>定价</th>\n' +
+                        '<th>作者</th>\n' +
+                        '<th>书籍类型</th>\n' +
+                        '<th>书籍简介</th>\n' +
+                        '<th>出版社</th>\n' +
+                        '<th>封面图片</th>\n' +
+                        '                            <th style="text-align:center;">操作</th>\n' +
+                        '                        </tr>\n' +
+                        '                        </thead>\n' +
+                        '\n<tbody>' + str + ' </tbody> </table>';
+                }
+
+            }
+        })
+    }
+</script>
+</body>
+</html>

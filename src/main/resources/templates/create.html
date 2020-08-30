@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>图书馆管理运营中心</title>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+</head>
+<div class="layui-container">
+    <div class="layui-row">
+        <div class="layui-col-lg12">
+            <fieldset class="layui-elem-field">
+                <legend>新增信息</legend>
+                <div class="layui-field-box">
+                    <form class="layui-form">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">书籍名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="name" id="name" required lay-verify="required"
+                                       placeholder="请输入标题" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">书籍编码</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="isbn" id="isbn" required lay-verify="required"
+                                       placeholder="请输入标题" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">书架编号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="bkCaseId" id="bkCaseId" required lay-verify="required"
+                                       placeholder="请输入标题" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">定价</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="price" id="price" required lay-verify="required"
+                                       placeholder="请输入标题" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">作者</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="author" id="author" required lay-verify="required"
+                                       placeholder="请输入标题" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">书籍类型</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="type" id="type" required lay-verify="required"
+                                       placeholder="请输入标题" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">书籍简介</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="synopsis" id="synopsis" required lay-verify="required"
+                                       placeholder="请输入标题" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">出版社</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="press" id="press" required lay-verify="required"
+                                       placeholder="请输入标题" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">封面图片</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="image" id="image" required lay-verify="required"
+                                       placeholder="请输入标题" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit onclick="add()">立即提交</button>
+                                <button type="reset" class="layui-btn layui-btn-primary" onclick="create()">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="./javascript/jquery.min.js"></script>
+<script type="text/javascript" src="./layui/layui.js"></script>
+<script type="text/javascript" src="./javascript/dw_form_submit.js"></script>
+<script type="text/javascript" src="./common.js"></script>
+<script>
+    var token = getQueryString2("token");
+    console.log("token",token)
+    var id = getQueryString2("id");
+    console.log("qqww", id)
+
+    function page(i) {
+        window.location.href = "/library/" + i + "?token=" + token
+    }
+
+    function add() {
+        var name = document.getElementById("name").value
+        var isbn = document.getElementById("isbn").value
+        var bkCaseId = document.getElementById("bkCaseId").value
+        var price = document.getElementById("price").value
+        var author = document.getElementById("author").value
+        var type = document.getElementById("type").value
+        var synopsis = document.getElementById("synopsis").value
+        var press = document.getElementById("press").value
+        var image = document.getElementById("image").value
+        console.log("1ad", name)
+        if (!name || !isbn || !bkCaseId || !price || !author || !type || !synopsis || !press || !image) {
+            alert("参数不可为空");
+            return;
+        }
+
+        $.ajax({
+            url: "/library/book/save",
+            type: "post",
+            headers: {"authorization": token},
+            data: {
+                name: name, isbn: isbn, bkCaseId: bkCaseId, price: price, author: author,
+                type: type, synopsis: synopsis, press: press, image: image
+            },
+            dataType: "json",
+            success: function (res) {
+                console.log(res)
+                if (res.code === 500) {
+                    if(res.message=="JWT已过期"){
+                        window.location.href="login";
+                    }
+                    alert(res.message);
+                } else {
+                    window.location.href="books?token="+token;
+                }
+            }
+        })
+    }
+
+    function create() {
+        window.location.href = 'create?token=' + token
+    }
+</script>
+</body>
+</html>

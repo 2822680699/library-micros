@@ -1,6 +1,7 @@
 package com.wonders.library.platform.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wonders.library.common.filter.JwtConfig;
 import com.wonders.library.common.filter.JwtHelper;
 import com.wonders.library.common.utils.MD5Utils;
 import com.wonders.library.common.utils.ResultVo;

@@ -12,9 +12,10 @@ public interface BookService {
      *
      * @param page 页数
      * @param rows     条数
+     * @param name 书籍名称
      * @return
      */
-    ResultVo getBookList(int page, int rows);
+    ResultVo getBookList(int page, int rows,String name);
 
     /**
      * 新增书籍信息

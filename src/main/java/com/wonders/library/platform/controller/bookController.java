@@ -21,19 +21,22 @@ public class bookController {
     @Autowired
     BookService bookService;
 
-    @GetMapping("/list")
+    @PostMapping("/list")
     @ApiOperation("获取书籍列表信息")
     @ApiImplicitParams({@ApiImplicitParam(name = "page", value = "页数", paramType = "query", dataType = "String")
             , @ApiImplicitParam(name = "rows", value = "条数", paramType = "query", dataType = "String")
-            , @ApiImplicitParam(name = "Authorization", value = "唯一授权码", paramType = "header", dataType = "String")})
-    public ResultVo userList(@RequestParam String page, @RequestParam String rows,@RequestHeader String Authorization) {
+            , @ApiImplicitParam(name = "name", value = "书籍名称", paramType = "query", dataType = "String")
+            , @ApiImplicitParam(name = "authorization", value = "唯一授权码", paramType = "header", dataType = "String")})
+    public ResultVo userList(@RequestParam String page, @RequestParam String rows,@RequestParam String name,@RequestHeader String authorization) {
+        System.out.println("authorization==="+authorization);
         if (StringUtils.isEmpty(page)) {
             return ResultVo.failed("页数不可为空！");
         }
         if (StringUtils.isEmpty(rows)) {
             return ResultVo.failed("条数不可为空！");
         }
-        ResultVo resultVo = bookService.getBookList(Integer.parseInt(page), Integer.parseInt(rows));
+
+        ResultVo resultVo = bookService.getBookList(Integer.parseInt(page), Integer.parseInt(rows),name);
         return resultVo;
     }
 
@@ -88,8 +91,8 @@ public class bookController {
     @PostMapping("/byId")
     @ApiOperation("获取书籍详情信息")
     @ApiImplicitParams({@ApiImplicitParam(name = "id", value = "编号", paramType = "query", dataType = "String")
-            , @ApiImplicitParam(name = "Authorization", value = "唯一授权码", paramType = "header", dataType = "String")})
-    public ResultVo getById(@RequestParam String id,@RequestHeader String Authorization) {
+            , @ApiImplicitParam(name = "authorization", value = "唯一授权码", paramType = "header", dataType = "String")})
+    public ResultVo getById(@RequestParam String id,@RequestHeader String authorization) {
         if (StringUtils.isEmpty(id)) {
             return ResultVo.failed("编号不可为空！");
         }
@@ -100,8 +103,8 @@ public class bookController {
     @PostMapping("/del")
     @ApiOperation("删除书籍信息")
     @ApiImplicitParams({@ApiImplicitParam(name = "id", value = "编号", paramType = "query", dataType = "String")
-            , @ApiImplicitParam(name = "Authorization", value = "唯一授权码", paramType = "header", dataType = "String")})
-    public ResultVo delBook(@RequestParam String id,@RequestHeader String Authorization) {
+            , @ApiImplicitParam(name = "authorization", value = "唯一授权码", paramType = "header", dataType = "String")})
+    public ResultVo delBook(@RequestParam String id,@RequestHeader String authorization) {
         if (StringUtils.isEmpty(id)) {
             return ResultVo.failed("编号不可为空！");
         }
@@ -121,10 +124,10 @@ public class bookController {
             , @ApiImplicitParam(name = "synopsis", value = "书籍简介", paramType = "query", dataType = "String")
             , @ApiImplicitParam(name = "press", value = "出版社", paramType = "query", dataType = "String")
             , @ApiImplicitParam(name = "image", value = "封面图片", paramType = "query", dataType = "String")
-            , @ApiImplicitParam(name = "Authorization", value = "唯一授权码", paramType = "header", dataType = "String")})
+            , @ApiImplicitParam(name = "authorization", value = "唯一授权码", paramType = "header", dataType = "String")})
     public ResultVo putBook(@RequestParam String id, @RequestParam String name, @RequestParam String isbn, @RequestParam String bkCaseId,
                             @RequestParam String price, @RequestParam String author, @RequestParam String type,
-                            @RequestParam String synopsis, @RequestParam String press, @RequestParam String image,@RequestHeader String Authorization) {
+                            @RequestParam String synopsis, @RequestParam String press, @RequestParam String image,@RequestHeader String authorization) {
         if (StringUtils.isEmpty(id)) {
             return ResultVo.failed("编号不可为空！");
         }
